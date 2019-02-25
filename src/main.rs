@@ -7,17 +7,12 @@ fn main() -> erl::Result<()> {
   let mut listener = node.publish(42332)?;
   let mut connection = listener.accept()?;
 
-  let stop = erl::Atom::new("stop")?;
   loop {
-    let message = connection.receive()?;
-    println!("{:?}", message);
-    if let erl::Message::RegisteredSend {
-      term: erl::Term::Atom(atom),
-      ..
-    } = message
-    {
-      if atom == stop {
-        break;
+    if let erl::Message::RegisteredSend { term, .. } = connection.receive()? {
+      let buffer = erl::TermViewBuffer::new();
+      match buffer.view(&term) {
+        erl::atom!("stop") => break,
+        view => { dbg!(view); }
       }
     }
   }

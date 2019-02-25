@@ -4,7 +4,7 @@ pub use crate::{
   c_node::{CNode, Connection, Listener},
   err::{Error, ErrorKind, Result, ResultExt},
   name::NodeName,
-  ty::{Atom, ControlMessage, Message, Pid, Reference, Term, Tuple},
+  ty::{Atom, ControlMessage, Message, Pid, Reference, Term, TermView, TermViewBuffer, Tuple},
 };
 
 mod atom;
@@ -19,5 +19,13 @@ mod pid;
 mod protocol;
 mod read;
 mod term;
+mod term_view;
 mod ty;
 mod x;
+
+#[macro_export]
+macro_rules! atom {
+  ($p:pat) => {
+    $crate::TermView::Atom($p)
+  };
+}

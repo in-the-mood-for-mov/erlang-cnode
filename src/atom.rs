@@ -15,6 +15,10 @@ impl Atom {
     }
     Ok(Atom(text_str))
   }
+
+  pub fn name(&self) -> &str {
+    borrow::Borrow::borrow(self)
+  }
 }
 
 impl borrow::Borrow<str> for Atom {

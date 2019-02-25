@@ -137,3 +137,15 @@ pub struct AtomCacheKey {
 pub struct AtomCache {
   pub entries: collections::HashMap<AtomCacheKey, Atom>,
 }
+
+pub struct TermViewBuffer<'term> {
+  pub atoms: cursed_collections::AppendOnlyVec<&'term str>,
+}
+
+#[derive(Debug)]
+pub enum TermView<'term> {
+  Nil,
+  Atom(&'term str),
+  Integer(i32),
+  Float(f64),
+}
