@@ -1,0 +1,21 @@
+[package]
+name = "erlang-cnode"
+version = "0.1.0"
+authors = ["Simon Génier <1782845+animalsiknow@users.noreply.github.com>"]
+edition = "2018"
+license = "MPL-2.0"
+
+[dependencies.cursed-collections]
+version = "0.6"
+
+[dependencies.in_addr]
+version = "1.0"
+
+[dependencies.ei-sys]
+version = "0.8"
+
+[dependencies.error-chain]
+version = "0.12"
+
+[dependencies.libc]
+version = "0.2"
