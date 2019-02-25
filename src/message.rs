@@ -11,7 +11,7 @@ impl ControlMessage {
         from,
         to,
         trace_token,
-      } => ext::term(input, atom_cache).map(|(input, term)| {
+      } => ext::read_term(input, atom_cache).map(|(input, term)| {
         (
           input,
           Message::Send {
@@ -22,7 +22,21 @@ impl ControlMessage {
           },
         )
       }),
-      ControlMessage::RegisteredSend { .. } => unimplemented!(),
+      ControlMessage::RegisteredSend {
+        from,
+        to,
+        trace_token,
+      } => ext::read_term(input, atom_cache).map(|(input, term)| {
+        (
+          input,
+          Message::RegisteredSend {
+            from,
+            to,
+            trace_token,
+            term,
+          },
+        )
+      }),
       ControlMessage::Link { .. } => unimplemented!(),
       ControlMessage::Unlink { .. } => unimplemented!(),
       ControlMessage::Exit { .. } => unimplemented!(),

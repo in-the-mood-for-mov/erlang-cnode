@@ -133,16 +133,18 @@ impl Connection {
       let mut c_message = mem::uninitialized::<ei_sys::erlang_msg>();
       let mut buffer = x::XBuffer::new();
       loop {
-        match ei_sys::ei_xreceive_msg(
+        let result = ei_sys::ei_xreceive_msg(
           socket_as_fd(&self.tcp_stream),
           &mut c_message,
           buffer.inner_mut(),
-        ) {
+        );
+        match result {
           ei_sys::ERL_ERROR => return Err(c::last_error()),
           ei_sys::ERL_TICK => (),
           ei_sys::ERL_MSG => {
-            let (input, ()) =
-              protocol::read_distribution_header(buffer.as_slice(), &mut self.atom_cache)?;
+            let input = buffer.as_slice();
+            let (input, ()) = protocol::read_version_magic(input)?;
+            let (input, ()) = protocol::read_distribution_header(input, &mut self.atom_cache)?;
             let control_message = ControlMessage::from_c(&c_message)?;
             let (_, message) = control_message.read_message(input, &self.atom_cache)?;
             return Ok(message);

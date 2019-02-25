@@ -26,6 +26,15 @@ impl From<u8> for AtomCacheReferenceFlags {
   }
 }
 
+pub fn read_version_magic<'input>(input: &[u8]) -> read::IResult<()> {
+  let (input, version) = read::be_u8::<u8>(input)?;
+  if version == ei::VERSION_MAGIC {
+    Ok((input, ()))
+  } else {
+    Err(ErrorKind::UnsupportedProtocolVersion(version).into())
+  }
+}
+
 pub fn read_distribution_header<'input>(
   original_input: &'input [u8],
   atom_cache: &mut AtomCache,

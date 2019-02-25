@@ -34,23 +34,35 @@ pub struct Pid {
 pub struct Tuple(pub Box<[Term]>);
 
 #[derive(Debug)]
+pub struct List(pub Box<[Term]>);
+
+#[derive(Debug)]
+pub struct Binary(pub Box<[u8]>);
+
+#[derive(Debug)]
 pub enum Term {
+  Nil,
   Integer(i32),
   Float(f64),
   Atom(Atom),
   Pid(Pid),
   Reference(Reference),
   Tuple(Tuple),
+  List(List),
+  Binary(Binary),
 }
 
 #[derive(Debug, Eq, PartialEq)]
 pub enum TermKind {
+  Nil,
   Integer,
   Float,
   Atom,
   Pid,
   Reference,
   Tuple,
+  List,
+  Binary,
 }
 
 #[derive(Debug)]
@@ -72,6 +84,7 @@ pub enum ControlMessage {
   RegisteredSend {
     from: Pid,
     to: Atom,
+    trace_token: Option<TraceToken>,
   },
   Link {
     from: Pid,
@@ -92,6 +105,12 @@ pub enum Message {
   Send {
     from: Pid,
     to: Pid,
+    trace_token: Option<TraceToken>,
+    term: Term,
+  },
+  RegisteredSend {
+    from: Pid,
+    to: Atom,
     trace_token: Option<TraceToken>,
     term: Term,
   },

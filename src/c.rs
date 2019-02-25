@@ -49,7 +49,11 @@ impl ControlMessage {
       ERL_EXIT => unimplemented!(),
       ERL_UNLINK => unimplemented!(),
       ERL_NODE_LINK => unimplemented!(),
-      ERL_REG_SEND => unimplemented!(),
+      ERL_REG_SEND => Ok(ControlMessage::RegisteredSend {
+        from: Pid::from_c(&message.from)?,
+        to: Atom::from_c(&message.toname)?,
+        trace_token: None,
+      }),
       ERL_GROUP_LEADER => unimplemented!(),
       ERL_EXIT2 => unimplemented!(),
       message_type => Err(ErrorKind::UnknownMessageType(message_type).into()),

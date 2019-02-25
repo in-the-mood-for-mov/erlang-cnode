@@ -1,4 +1,5 @@
 use crate::ty::*;
+use ei_sys as ei;
 use error_chain::*;
 use std::{io, os, str};
 
@@ -23,7 +24,7 @@ error_chain! {
       display(
         "found protocol version {}, but only {} is supported",
         version,
-        ei_sys::VERSION_MAGIC,
+        ei::VERSION_MAGIC,
       ),
     }
 
@@ -41,6 +42,15 @@ error_chain! {
     }
 
     UnknownMessageType(raw_type: os::raw::c_long) {
+    }
+
+    LenOutOfRange(value: u64) {
+      description("a term was encoded with a length that is too large to decode"),
+      display(
+        "this platform does not support lengths larger than {}, but got {}",
+        usize::max_value(),
+        value,
+      ),
     }
 
     NameLengthOutOfRange(name: Box<[u8]>, name_kind: NameKind) {

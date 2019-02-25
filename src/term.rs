@@ -24,15 +24,30 @@ impl From<Tuple> for Term {
   }
 }
 
+impl From<List> for Term {
+  fn from(list: List) -> Self {
+    Term::List(list)
+  }
+}
+
+impl From<Binary> for Term {
+  fn from(binary: Binary) -> Self {
+    Term::Binary(binary)
+  }
+}
+
 impl Term {
   pub fn kind(&self) -> TermKind {
     match self {
+      Term::Nil => TermKind::Nil,
       Term::Integer(_) => TermKind::Integer,
       Term::Float(_) => TermKind::Float,
       Term::Atom(_) => TermKind::Atom,
       Term::Pid { .. } => TermKind::Pid,
       Term::Reference { .. } => TermKind::Reference,
       Term::Tuple(_) => TermKind::Tuple,
+      Term::List(_) => TermKind::List,
+      Term::Binary(_) => TermKind::Binary,
     }
   }
 }
